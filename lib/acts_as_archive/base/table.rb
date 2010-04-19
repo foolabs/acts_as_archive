@@ -11,6 +11,8 @@ module ActsAsArchive
             base.send :extend, ActsAsArchive::Base::Adapters::MySQL
           elsif base.connection.class.to_s.include?('PostgreSQL')
             base.send :extend, ActsAsArchive::Base::Adapters::PostgreSQL
+          elsif base.connection.class.to_s.include?('SQLite')
+            base.send :extend, ActsAsArchive::Base::Adapters::SQLite
           else
             raise 'acts_as_archive does not support this database adapter'
           end
@@ -29,7 +31,7 @@ module ActsAsArchive
               CREATE TABLE archived_#{table_name}
                 #{"ENGINE=InnoDB" if connection.class.to_s.include?('Mysql')}
                 AS SELECT * from #{table_name}
-                WHERE false;
+                WHERE #{ connection.class.to_s.include?('SQLite') ? '1=0' : 'false' };
             })
             columns = connection.columns("archived_#{table_name}").collect(&:name)
             unless columns.include?('deleted_at')

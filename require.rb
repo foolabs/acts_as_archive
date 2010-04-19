@@ -7,7 +7,7 @@ Require do
   gem :require, '=0.2.1'
   gem(:rake, '=0.8.7') { require 'rake' }
   gem :rspec, '=1.3.0'
-  
+
   gemspec do
     author 'Winton Welsh'
     dependencies do
@@ -19,25 +19,26 @@ Require do
     summary "Don't delete your records, move them to a different table"
     version '0.2.10'
   end
-  
+
   lib do
     require "lib/acts_as_archive/base"
     require "lib/acts_as_archive/base/adapters/mysql"
     require "lib/acts_as_archive/base/adapters/postgresql"
+    require "lib/acts_as_archive/base/adapters/sqlite"
     require "lib/acts_as_archive/base/destroy"
     require "lib/acts_as_archive/base/restore"
     require "lib/acts_as_archive/base/table"
     require "lib/acts_as_archive/migration"
   end
-  
+
   rails_init { require 'lib/acts_as_archive' }
-  
+
   rakefile do
     gem(:rake) { require 'rake/gempackagetask' }
     gem(:rspec) { require 'spec/rake/spectask' }
     require 'require/tasks'
   end
-  
+
   spec_helper do
     require 'require/spec_helper'
     gem :activerecord
