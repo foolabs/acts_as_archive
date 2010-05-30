@@ -36,7 +36,7 @@ describe ActsAsArchive::Base::Table do
     end
 
     it "should create archive indexes" do
-      indexes.to_set.should == [ "id", "deleted_at" ].to_set
+      indexes.to_set.should == [ "id", ["subject_id", "subject_type"], "deleted_at" ].to_set
     end
 
     it "should destroy archive indexes" do

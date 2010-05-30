@@ -12,7 +12,7 @@ module ActsAsArchive
 select
     t.relname as table_name,
     i.relname as index_name,
-    a.attname as column_name
+    array_to_string(array_agg(a.attname), ', ') as column_names
 from
     pg_class t,
     pg_class i,
@@ -25,13 +25,16 @@ where
     and a.attnum = ANY(ix.indkey)
     and t.relkind = 'r'
     and t.relname = 'archived_#{table_name}'
+group by
+    t.relname,
+    i.relname
 order by
     t.relname,
     i.relname
 SQL
 
           indexes = connection.select_all(index_query).collect do |r|
-            r["column_name"]
+            r["column_names"].split(", ").size > 1 ? r["column_names"].split(", ") : r["column_names"]
           end
         end
       end

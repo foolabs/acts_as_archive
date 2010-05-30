@@ -39,6 +39,7 @@ def create_records(klass=Article, values={})
         when :id; x
         when :deleted_at; 'NULL'
         when :read; true
+        when :subject_id; x
         else "'#{c.capitalize} #{x}'"
         end
       end
@@ -71,6 +72,8 @@ def establish_test_db
     t.string :title
     t.string :body
     t.boolean :read # break mysql w/o quotation
+    t.integer :subject_id
+    t.string :subject_type
   end
   # Load the model
   load "#{SPEC}/db/models/article.rb"

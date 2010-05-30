@@ -74,27 +74,9 @@ module ActsAsArchive
               r["Column_name"]
             end
           when "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
-            #postgresql is...slightly...more complicated
-            index_query = <<EOS
-SELECT c2.relname as index_name
-FROM pg_catalog.pg_class c,
-     pg_catalog.pg_class c2,
-     pg_catalog.pg_index i
-WHERE c.oid = (SELECT c.oid
-               FROM pg_catalog.pg_class c
-               WHERE c.relname ~ '^(archived_#{table_name})$')
-AND c.oid = i.indrelid
-AND i.indexrelid = c2.oid
-EOS
+            index_query = "SELECT indexname FROM pg_indexes WHERE tablename = '#{table_name}'"
             indexes = connection.select_all(index_query).collect do |r|
-              r["index_name"]
-            end
-
-            # HACK: reverse engineer the column name
-            # This sucks, but acts_as_archive only adds indexes on single columns anyway so it should work OK
-            # and getting the columns indexed is INCREDIBLY complicated in PostgreSQL.
-            indexes.map do |index|
-              index.split("_on_").last
+              r["indexname"].split("_on_").last.split("_and_")
             end
           else
             raise "Unsupported Database"

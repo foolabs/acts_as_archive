@@ -96,7 +96,7 @@ If you are querying your archive a lot, you will want to add indexes:
 
 <pre>
 class Article < ActiveRecord::Base
-  acts_as_archive :indexes => [ :id, :created_at, :deleted_at ]
+  acts_as_archive :indexes => [ :id, [:subject_id, :subject_type], :created_at, :deleted_at ]
 end
 </pre>
 

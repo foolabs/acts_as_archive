@@ -14,7 +14,7 @@ module ActsAsArchive
           end
           
           def self.archive_indexes
-            #{Array(options[:indexes]).collect(&:to_s).inspect}
+            #{Array(options[:indexes]).map{|index| index.is_a?(Array) ? index.map(&:to_s) : index.to_s}.inspect}
           end
           
           class Archive < ActiveRecord::Base
