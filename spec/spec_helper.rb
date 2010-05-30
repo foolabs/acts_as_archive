@@ -80,7 +80,7 @@ def establish_test_db
 end
 
 def indexes
-  Article.send(:archive_table_indexed_columns)
+  Article.send(:archive_table_indexed_columns).concat(['column_that_does_not_exist_yet'])
 end
 
 def migrate_up(directory='migrate')

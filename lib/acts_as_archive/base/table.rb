@@ -35,7 +35,7 @@ module ActsAsArchive
             unless columns.include?('deleted_at')
               connection.add_column("archived_#{table_name}", :deleted_at, :datetime)
             end
-          end
+          en
         end
 
         def create_archive_indexes
@@ -43,10 +43,18 @@ module ActsAsArchive
             indexes = archive_table_indexed_columns
 
             (archive_indexes - indexes).each do |index|
-              connection.add_index("archived_#{table_name}", index)
+              begin
+                connection.add_index("archived_#{table_name}", index)
+              rescue ActiveRecord::StatementInvalid => e
+                Rails.logger.warn "Can't add index : #{index.inspect} on #{table_name} (#{e.to_s})"
+              end
             end
             (indexes - archive_indexes).each do |index|
-              connection.remove_index("archived_#{table_name}", index)
+              begin 
+                connection.remove_index("archived_#{table_name}", index)
+              rescue ActiveRecord::StatementInvalid => e
+                Rails.logger.warn "Can't remove index : #{index.inspect} on #{table_name} (#{e.to_s})"
+              end
             end
           end
         end

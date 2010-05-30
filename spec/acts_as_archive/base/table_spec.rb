@@ -36,13 +36,13 @@ describe ActsAsArchive::Base::Table do
     end
 
     it "should create archive indexes" do
-      indexes.to_set.should == [ "id", ["subject_id", "subject_type"], "deleted_at" ].to_set
+      indexes.to_set.should == [ "id", ["subject_id", "subject_type"], "deleted_at", "column_that_does_not_exist_yet" ].to_set
     end
 
     it "should destroy archive indexes" do
       Article.class_eval { acts_as_archive }
       Article.create_archive_indexes
-      indexes.should == []
+      indexes.should == ["column_that_does_not_exist_yet"]
     end
   end
 
