@@ -43,7 +43,7 @@ module ActsAsArchive
             indexes = archive_table_indexed_columns
 
             (archive_indexes - indexes).each do |index|
-              connection.add_index("archived_#{table_name}", index)  if table_has_columns(index)
+              connection.add_index("archived_#{table_name}", index, :name => index_name_for(table_name, index))  if table_has_columns(index)
             end
             (indexes - archive_indexes).each do |index|
               connection.remove_index("archived_#{table_name}", index) if table_has_columns(index)
@@ -85,6 +85,10 @@ module ActsAsArchive
 
         def table_has_columns(columns)
           !Array(columns).select {|current_column| self::Archive.column_names.include?(current_column.to_s)}.empty?
+        end
+
+        def index_name_for(table_name, index)
+          "index_by_#{Array(index).join("_and_")}".to_sym if "index_archived_#{table_name}_on_#{Array(index).join("_and_")}".length > 63
         end
       end
 
