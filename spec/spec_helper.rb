@@ -38,6 +38,7 @@ def create_records(klass=Article, values={})
         case c.intern
         when :id; x
         when :deleted_at; 'NULL'
+        when :read; true
         else "'#{c.capitalize} #{x}'"
         end
       end
