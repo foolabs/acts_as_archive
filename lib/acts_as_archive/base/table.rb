@@ -35,7 +35,7 @@ module ActsAsArchive
             unless columns.include?('deleted_at')
               connection.add_column("archived_#{table_name}", :deleted_at, :datetime)
             end
-          en
+          end
         end
 
         def create_archive_indexes
