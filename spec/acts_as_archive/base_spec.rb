@@ -14,7 +14,7 @@ describe ActsAsArchive::Base do
     
     it "should add self.archive_indexes to the model" do
       Article.respond_to?(:archive_indexes).should == true
-      Article.archive_indexes.should == [ 'id', ['subject_id','subject_type'], 'deleted_at' ]
+      Article.archive_indexes.should == [ :id, [ :subject_id, :subject_type ], :deleted_at ]
     end
     
     it "should add Archive class to the model" do

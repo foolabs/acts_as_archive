@@ -34,7 +34,7 @@ order by
 SQL
 
           indexes = connection.select_all(index_query).collect do |r|
-            r["column_names"].split(", ").size > 1 ? r["column_names"].split(", ") : r["column_names"]
+            r["column_names"].split(", ").size > 1 ? r["column_names"].split(", ").map(&:to_sym) : r["column_names"].to_sym
           end
         end
       end

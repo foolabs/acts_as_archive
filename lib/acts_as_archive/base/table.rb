@@ -43,18 +43,10 @@ module ActsAsArchive
             indexes = archive_table_indexed_columns
 
             (archive_indexes - indexes).each do |index|
-              begin
-                connection.add_index("archived_#{table_name}", index)
-              rescue ActiveRecord::StatementInvalid => e
-                Rails.logger.warn "Can't add index : #{index.inspect} on #{table_name} (#{e.to_s})"
-              end
+              connection.add_index("archived_#{table_name}", index)  if table_has_columns(index)
             end
             (indexes - archive_indexes).each do |index|
-              begin 
-                connection.remove_index("archived_#{table_name}", index)
-              rescue ActiveRecord::StatementInvalid => e
-                Rails.logger.warn "Can't remove index : #{index.inspect} on #{table_name} (#{e.to_s})"
-              end
+              connection.remove_index("archived_#{table_name}", index) if table_has_columns(index)
             end
           end
         end
@@ -74,21 +66,25 @@ module ActsAsArchive
 
         private
 
-        def archive_table_indexed_columns
-          case connection.class.to_s
-          when "ActiveRecord::ConnectionAdapters::MysqlAdapter"
-            index_query = "SHOW INDEX FROM archived_#{table_name}"
-            indexes = connection.select_all(index_query).collect do |r|
-              r["Column_name"]
-            end
-          when "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
-            index_query = "SELECT indexname FROM pg_indexes WHERE tablename = '#{table_name}'"
-            indexes = connection.select_all(index_query).collect do |r|
-              r["indexname"].split("_on_").last.split("_and_")
-            end
-          else
-            raise "Unsupported Database"
-          end
+        # def archive_table_indexed_columns
+        #   case connection.class.to_s
+        #   when "ActiveRecord::ConnectionAdapters::MysqlAdapter"
+        #     index_query = "SHOW INDEX FROM archived_#{table_name}"
+        #     indexes = connection.select_all(index_query).collect do |r|
+        #       r["Column_name"]
+        #     end
+        #   when "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
+        #     index_query = "SELECT indexname FROM pg_indexes WHERE tablename = '#{table_name}'"
+        #     indexes = connection.select_all(index_query).collect do |r|
+        #       r["indexname"].split("_on_").last.split("_and_")
+        #     end
+        #   else
+        #     raise "Unsupported Database"
+        #   end
+        # end
+
+        def table_has_columns(columns)
+          !Array(columns).select {|current_column| self::Archive.column_names.include?(current_column.to_s)}.empty?
         end
       end
 

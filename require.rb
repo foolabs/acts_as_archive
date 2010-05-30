@@ -14,10 +14,10 @@ Require do
       gem :require
     end
     email 'mail@wintoni.us'
-    name 'acts_as_archive'
-    homepage "http://github.com/winton/#{name}"
+    name 'gravis-acts_as_archive'
+    homepage "http://github.com/gravis/#{name}"
     summary "Don't delete your records, move them to a different table"
-    version '0.2.5'
+    version '0.2.8'
   end
   
   lib do
