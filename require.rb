@@ -17,7 +17,7 @@ Require do
     name 'gravis-acts_as_archive'
     homepage "http://github.com/gravis/#{name}"
     summary "Don't delete your records, move them to a different table"
-    version '0.2.8'
+    version '0.2.9'
   end
   
   lib do
