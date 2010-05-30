@@ -66,24 +66,8 @@ module ActsAsArchive
 
         private
 
-        # def archive_table_indexed_columns
-        #   case connection.class.to_s
-        #   when "ActiveRecord::ConnectionAdapters::MysqlAdapter"
-        #     index_query = "SHOW INDEX FROM archived_#{table_name}"
-        #     indexes = connection.select_all(index_query).collect do |r|
-        #       r["Column_name"]
-        #     end
-        #   when "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
-        #     index_query = "SELECT indexname FROM pg_indexes WHERE tablename = '#{table_name}'"
-        #     indexes = connection.select_all(index_query).collect do |r|
-        #       r["indexname"].split("_on_").last.split("_and_")
-        #     end
-        #   else
-        #     raise "Unsupported Database"
-        #   end
-        # end
-
         def table_has_columns(columns)
+          self::Archive.reset_column_information
           !Array(columns).select {|current_column| self::Archive.column_names.include?(current_column.to_s)}.empty?
         end
 
