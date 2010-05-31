@@ -12,7 +12,7 @@ module ActsAsArchive
           current_index = 0
           indexes.each do |index|
             if index['Seq_in_index'] != '1'
-              final_indexes[current_index-1] = Array(final_indexes[current_index-1]).flatten.concat(Array(index['Column_name']).to_sym)
+              final_indexes[current_index-1] = Array(final_indexes[current_index-1]).flatten.concat(Array(index['Column_name'].to_sym))
             else
               final_indexes[current_index] = index['Column_name'].to_sym
               current_index += 1
