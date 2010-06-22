@@ -72,7 +72,7 @@ module ActsAsArchive
         end
 
         def index_name_for(table_name, index)
-          "index_by_#{Array(index).join("_and_")}".to_sym if "index_archived_#{table_name}_on_#{Array(index).join("_and_")}".length > 63
+          "index_by_#{Array(index).join("_and_")}" if "index_archived_#{table_name}_on_#{Array(index).join("_and_")}".length > 63
         end
       end
 
